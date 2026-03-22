@@ -2,9 +2,22 @@
 
 ## Prerequisites
 
-- [Terraform](https://developer.hashicorp.com/terraform/install) installed locally
-- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/) installed locally
 - A Hetzner Cloud account
+- [Terraform](https://developer.hashicorp.com/terraform/install) and [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/) installed locally
+
+Quick install on Linux:
+
+```bash
+# Terraform
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install terraform
+
+# Ansible
+sudo apt install pipx
+pipx install --include-deps ansible
+pipx ensurepath
+```
 
 ## Terraform variables
 
