@@ -3,8 +3,95 @@
   become: true
   become_user: "{{ username }}"
   shell: |
-    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    export NVM_DIR="{{ user_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g @anthropic-ai/claude-code
   args:
     executable: /bin/bash
+
+- name: Create Claude config directory
+  become: true
+  become_user: "{{ username }}"
+  file:
+    path: "{{ user_home }}/.claude"
+    state: directory
+    mode: "0755"
+
+- name: Configure Claude Code LSP servers
+  become: true
+  become_user: "{{ username }}"
+  copy:
+    content: |
+      {
+        "typescript": {
+          "command": "typescript-language-server",
+          "args": ["--stdio"],
+          "extensionToLanguage": {
+            ".ts": "typescript",
+            ".tsx": "typescript",
+            ".js": "javascript",
+            ".jsx": "javascript"
+          }
+        },
+        "go": {
+          "command": "gopls",
+          "args": ["serve"],
+          "extensionToLanguage": {
+            ".go": "go"
+          }
+        },
+        "rust": {
+          "command": "rust-analyzer",
+          "extensionToLanguage": {
+            ".rs": "rust"
+          }
+        },
+        "svelte": {
+          "command": "svelte-language-server",
+          "args": ["--stdio"],
+          "extensionToLanguage": {
+            ".svelte": "svelte"
+          }
+        },
+        "html": {
+          "command": "vscode-html-language-server",
+          "args": ["--stdio"],
+          "extensionToLanguage": {
+            ".html": "html"
+          }
+        },
+        "css": {
+          "command": "vscode-css-language-server",
+          "args": ["--stdio"],
+          "extensionToLanguage": {
+            ".css": "css",
+            ".scss": "css",
+            ".less": "css"
+          }
+        },
+        "json": {
+          "command": "vscode-json-language-server",
+          "args": ["--stdio"],
+          "extensionToLanguage": {
+            ".json": "json"
+          }
+        },
+        "yaml": {
+          "command": "yaml-language-server",
+          "args": ["--stdio"],
+          "extensionToLanguage": {
+            ".yaml": "yaml",
+            ".yml": "yaml"
+          }
+        },
+        "bash": {
+          "command": "bash-language-server",
+          "args": ["start"],
+          "extensionToLanguage": {
+            ".sh": "bash",
+            ".bash": "bash"
+          }
+        }
+      }
+    dest: "{{ user_home }}/.claude/.lsp.json"
+    mode: "0644"

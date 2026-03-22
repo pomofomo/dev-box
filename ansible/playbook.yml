@@ -4,8 +4,9 @@
   become: true
   vars:
     username: "{{ ansible_user }}"
-    go_version: "1.22.4"
+    user_home: "{{ ansible_env.HOME if username == 'root' else '/home/' + username }}"
     netbird_interface: "wt0"
+    # telegram_bot_token: ""  # uncomment and set, or pass via --extra-vars
 
   tasks:
     - name: System updates
@@ -40,6 +41,8 @@
     - import_tasks: tasks/gh.yml
     - import_tasks: tasks/claude.yml
     - import_tasks: tasks/language-servers.yml
+    - import_tasks: tasks/telegram-channel.yml
+    - import_tasks: tasks/bashrc.yml
 
     - name: Print post-setup instructions
       debug:
@@ -47,9 +50,9 @@
           ========================================
           MANUAL STEPS REQUIRED — see README.md
           ========================================
-          1. netbird up        (login to Netbird)
-          2. claude             (login to Claude)
-          3. gh auth login      (login to GitHub CLI)
-          4. Add SSH public key to GitHub:
-             cat ~/.ssh/id_ed25519.pub
+          1. netbird up           (login to Netbird)
+          2. claude                (login to Claude)
+          3. gh auth login         (login to GitHub CLI)
+          4. Add SSH key to GitHub (cat ~/.ssh/id_ed25519.pub)
+          5. Telegram channel      (see README for pairing steps)
           ========================================
