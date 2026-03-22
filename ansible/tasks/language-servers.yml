@@ -1,0 +1,75 @@
+---
+# TypeScript / JavaScript
+- name: Install TypeScript language server
+  become: true
+  become_user: "{{ username }}"
+  shell: |
+    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    . "$NVM_DIR/nvm.sh"
+    npm install -g typescript typescript-language-server
+  args:
+    executable: /bin/bash
+
+# Go
+- name: Install gopls (Go language server)
+  become: true
+  become_user: "{{ username }}"
+  shell: |
+    export PATH=$PATH:/usr/local/go/bin:{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/go/bin
+    go install golang.org/x/tools/gopls@latest
+  args:
+    executable: /bin/bash
+
+# Rust
+- name: Install rust-analyzer
+  become: true
+  become_user: "{{ username }}"
+  shell: |
+    export PATH=$PATH:{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.cargo/bin
+    rustup component add rust-analyzer
+  args:
+    executable: /bin/bash
+
+# Svelte
+- name: Install Svelte language server
+  become: true
+  become_user: "{{ username }}"
+  shell: |
+    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    . "$NVM_DIR/nvm.sh"
+    npm install -g svelte-language-server
+  args:
+    executable: /bin/bash
+
+# CSS / HTML / JSON
+- name: Install vscode-langservers (HTML, CSS, JSON)
+  become: true
+  become_user: "{{ username }}"
+  shell: |
+    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    . "$NVM_DIR/nvm.sh"
+    npm install -g vscode-langservers-extracted
+  args:
+    executable: /bin/bash
+
+# YAML
+- name: Install YAML language server
+  become: true
+  become_user: "{{ username }}"
+  shell: |
+    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    . "$NVM_DIR/nvm.sh"
+    npm install -g yaml-language-server
+  args:
+    executable: /bin/bash
+
+# Bash
+- name: Install Bash language server
+  become: true
+  become_user: "{{ username }}"
+  shell: |
+    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    . "$NVM_DIR/nvm.sh"
+    npm install -g bash-language-server
+  args:
+    executable: /bin/bash

@@ -1,0 +1,55 @@
+---
+- name: Dev box setup
+  hosts: dev
+  become: true
+  vars:
+    username: "{{ ansible_user }}"
+    go_version: "1.22.4"
+    netbird_interface: "wt0"
+
+  tasks:
+    - name: System updates
+      apt:
+        update_cache: true
+        upgrade: dist
+        cache_valid_time: 3600
+
+    - name: Install base packages
+      apt:
+        name:
+          - curl
+          - wget
+          - unzip
+          - build-essential
+          - software-properties-common
+          - apt-transport-https
+          - ca-certificates
+          - gnupg
+          - jq
+        state: present
+
+    - import_tasks: tasks/git.yml
+    - import_tasks: tasks/ssh.yml
+    - import_tasks: tasks/docker.yml
+    - import_tasks: tasks/firewall.yml
+    - import_tasks: tasks/netbird.yml
+    - import_tasks: tasks/rust.yml
+    - import_tasks: tasks/go.yml
+    - import_tasks: tasks/nvm.yml
+    - import_tasks: tasks/bun.yml
+    - import_tasks: tasks/gh.yml
+    - import_tasks: tasks/claude.yml
+    - import_tasks: tasks/language-servers.yml
+
+    - name: Print post-setup instructions
+      debug:
+        msg: |
+          ========================================
+          MANUAL STEPS REQUIRED — see README.md
+          ========================================
+          1. netbird up        (login to Netbird)
+          2. claude             (login to Claude)
+          3. gh auth login      (login to GitHub CLI)
+          4. Add SSH public key to GitHub:
+             cat ~/.ssh/id_ed25519.pub
+          ========================================

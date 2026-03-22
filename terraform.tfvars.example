@@ -1,0 +1,4 @@
+hcloud_token   = "your-hetzner-api-token"
+ssh_public_key = "ssh-ed25519 AAAA..."
+server_name    = "dev-box"
+location       = "fsn1"

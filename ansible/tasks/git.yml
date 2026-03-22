@@ -1,0 +1,13 @@
+---
+- name: Install git
+  apt:
+    name: git
+    state: present
+
+- name: Configure git default branch
+  become: true
+  become_user: "{{ username }}"
+  git_config:
+    name: init.defaultBranch
+    value: main
+    scope: global

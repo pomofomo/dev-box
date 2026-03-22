@@ -1,0 +1,27 @@
+---
+- name: Ensure SSH server is installed and running
+  apt:
+    name: openssh-server
+    state: present
+
+- name: Enable SSH server
+  systemd:
+    name: ssh
+    enabled: true
+    state: started
+
+- name: Generate SSH client keypair for user
+  become: true
+  become_user: "{{ username }}"
+  openssh_keypair:
+    path: "/home/{{ username }}/.ssh/id_ed25519"
+    type: ed25519
+    comment: "{{ username }}@dev-box"
+  when: username != "root"
+
+- name: Generate SSH client keypair for root
+  openssh_keypair:
+    path: "/root/.ssh/id_ed25519"
+    type: ed25519
+    comment: "root@dev-box"
+  when: username == "root"

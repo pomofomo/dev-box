@@ -1,0 +1,8 @@
+---
+- name: Install Bun
+  become: true
+  become_user: "{{ username }}"
+  shell: |
+    curl -fsSL https://bun.sh/install | bash
+  args:
+    creates: "{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.bun/bin/bun"

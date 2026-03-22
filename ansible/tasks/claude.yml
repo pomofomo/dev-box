@@ -1,0 +1,10 @@
+---
+- name: Install Claude Code via npm
+  become: true
+  become_user: "{{ username }}"
+  shell: |
+    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    . "$NVM_DIR/nvm.sh"
+    npm install -g @anthropic-ai/claude-code
+  args:
+    executable: /bin/bash

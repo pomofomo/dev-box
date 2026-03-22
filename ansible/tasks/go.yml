@@ -1,0 +1,24 @@
+---
+- name: Download Go {{ go_version }}
+  get_url:
+    url: "https://go.dev/dl/go{{ go_version }}.linux-amd64.tar.gz"
+    dest: "/tmp/go{{ go_version }}.tar.gz"
+
+- name: Remove old Go installation
+  file:
+    path: /usr/local/go
+    state: absent
+
+- name: Extract Go
+  unarchive:
+    src: "/tmp/go{{ go_version }}.tar.gz"
+    dest: /usr/local
+    remote_src: true
+
+- name: Add Go to PATH
+  copy:
+    content: |
+      export PATH=$PATH:/usr/local/go/bin
+      export PATH=$PATH:{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/go/bin
+    dest: /etc/profile.d/go.sh
+    mode: "0644"

@@ -1,0 +1,17 @@
+---
+- name: Add GitHub CLI GPG key
+  get_url:
+    url: https://cli.github.com/packages/githubcli-archive-keyring.gpg
+    dest: /etc/apt/keyrings/githubcli.gpg
+    mode: "0644"
+
+- name: Add GitHub CLI repository
+  apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/githubcli.gpg] https://cli.github.com/packages stable main"
+    state: present
+
+- name: Install GitHub CLI
+  apt:
+    name: gh
+    state: present
+    update_cache: true

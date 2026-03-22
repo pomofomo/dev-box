@@ -1,0 +1,22 @@
+---
+- name: Add Netbird repository key
+  get_url:
+    url: https://pkgs.netbird.io/debian/public.key
+    dest: /etc/apt/keyrings/netbird.asc
+    mode: "0644"
+
+- name: Add Netbird repository
+  apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/netbird.asc] https://pkgs.netbird.io/debian stable main"
+    state: present
+
+- name: Install Netbird
+  apt:
+    name: netbird
+    state: present
+    update_cache: true
+
+- name: Enable Netbird service
+  systemd:
+    name: netbird
+    enabled: true

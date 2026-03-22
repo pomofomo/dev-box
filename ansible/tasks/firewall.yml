@@ -1,0 +1,31 @@
+---
+- name: Install UFW
+  apt:
+    name: ufw
+    state: present
+
+- name: UFW — default deny incoming
+  ufw:
+    direction: incoming
+    policy: deny
+
+- name: UFW — default allow outgoing
+  ufw:
+    direction: outgoing
+    policy: allow
+
+- name: UFW — allow SSH
+  ufw:
+    rule: allow
+    port: "22"
+    proto: tcp
+
+- name: UFW — allow all traffic on Netbird interface
+  ufw:
+    rule: allow
+    interface_or_direction: in
+    interface: "{{ netbird_interface }}"
+
+- name: UFW — enable firewall
+  ufw:
+    state: enabled
