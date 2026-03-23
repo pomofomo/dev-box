@@ -1,0 +1,13 @@
+---
+- name: Post-manual-config services
+  hosts: dev
+  become: true
+  vars:
+    username: "{{ ansible_user }}"
+    user_home: "{{ ansible_env.HOME if username == 'root' else '/home/' + username }}"
+    netbird_interface: "wt0"
+    # telegram_bot_token: ""  # pass via --extra-vars
+
+  tasks:
+    - import_tasks: tasks/portainer.yml
+    - import_tasks: tasks/telegram-channel.yml

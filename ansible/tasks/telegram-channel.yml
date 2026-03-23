@@ -1,5 +1,5 @@
 ---
-- name: Create Claude channels directory
+- name: Create Claude Telegram channel directory
   become: true
   become_user: "{{ username }}"
   file:
@@ -7,20 +7,7 @@
     state: directory
     mode: "0755"
 
-- name: Install Telegram channel plugin
-  become: true
-  become_user: "{{ username }}"
-  shell: |
-    export NVM_DIR="{{ user_home }}/.nvm"
-    . "$NVM_DIR/nvm.sh"
-    claude /plugin marketplace add anthropics/claude-plugins-official 2>/dev/null || true
-    claude /plugin marketplace update claude-plugins-official 2>/dev/null || true
-    claude /plugin install telegram@claude-plugins-official 2>/dev/null || true
-  args:
-    executable: /bin/bash
-  ignore_errors: true
-
-- name: Write Telegram bot token env file (if token provided)
+- name: Write Telegram bot token env file
   become: true
   become_user: "{{ username }}"
   copy:

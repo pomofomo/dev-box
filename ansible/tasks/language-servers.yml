@@ -4,7 +4,7 @@
   become: true
   become_user: "{{ username }}"
   shell: |
-    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    export NVM_DIR="{{ user_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g typescript typescript-language-server
   args:
@@ -15,7 +15,7 @@
   become: true
   become_user: "{{ username }}"
   shell: |
-    export PATH=$PATH:/usr/local/go/bin:{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/go/bin
+    export PATH=$PATH:/snap/bin:{{ user_home }}/go/bin
     go install golang.org/x/tools/gopls@latest
   args:
     executable: /bin/bash
@@ -25,7 +25,7 @@
   become: true
   become_user: "{{ username }}"
   shell: |
-    export PATH=$PATH:{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.cargo/bin
+    export PATH=$PATH:{{ user_home }}/.cargo/bin
     rustup component add rust-analyzer
   args:
     executable: /bin/bash
@@ -35,7 +35,7 @@
   become: true
   become_user: "{{ username }}"
   shell: |
-    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    export NVM_DIR="{{ user_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g svelte-language-server
   args:
@@ -46,7 +46,7 @@
   become: true
   become_user: "{{ username }}"
   shell: |
-    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    export NVM_DIR="{{ user_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g vscode-langservers-extracted
   args:
@@ -57,7 +57,7 @@
   become: true
   become_user: "{{ username }}"
   shell: |
-    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    export NVM_DIR="{{ user_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g yaml-language-server
   args:
@@ -68,7 +68,7 @@
   become: true
   become_user: "{{ username }}"
   shell: |
-    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    export NVM_DIR="{{ user_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g bash-language-server
   args:

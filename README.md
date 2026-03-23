@@ -17,6 +17,9 @@ sudo apt update && sudo apt install terraform
 sudo apt install pipx
 pipx install --include-deps ansible
 pipx ensurepath
+
+# Ansible Docker module (needed for post-setup.yml)
+ansible-galaxy collection install community.docker
 ```
 
 ## Terraform variables
@@ -38,29 +41,50 @@ The server type is CPX41 (8 vCPU, 16 GB RAM, Ubuntu 24.04).
 
 ## Quick start
 
+### Step 1 — Provision the server
+
 ```bash
-# 1. Provision the server
 terraform init
 terraform apply
-
-# 2. Note the server IP from terraform output
 terraform output server_ip
+```
 
-# 3. Run Ansible
+### Step 2 — Run the base playbook
+
+```bash
 cd ansible
 cp inventory.ini.example inventory.ini
-# Edit inventory.ini — replace YOUR_SERVER_IP with the IP from step 2
+# Edit inventory.ini — replace YOUR_SERVER_IP with the IP from step 1
 ansible-playbook -i inventory.ini playbook.yml
-
-# Optionally pass Telegram bot token:
-ansible-playbook -i inventory.ini playbook.yml --extra-vars "telegram_bot_token=YOUR_TOKEN"
 ```
+
+### Step 3 — Complete manual steps
+
+SSH into the server and complete the manual steps listed below.
+
+### Step 4 — Run the post-setup playbook
+
+After completing manual steps (at minimum `netbird up`), run the second playbook to set up services that depend on them:
+
+```bash
+# Without Telegram:
+ansible-playbook -i inventory.ini post-setup.yml
+
+# With Telegram bot token:
+ansible-playbook -i inventory.ini post-setup.yml --extra-vars "telegram_bot_token=YOUR_TOKEN"
+```
+
+This installs:
+- **Portainer** — Docker management UI, bound to Netbird IP on port 9999
+- **Telegram channel** — writes bot token to `~/.claude/channels/telegram/.env`
 
 ## What gets installed
 
+### Base playbook (`playbook.yml`)
+
 | Tool | Method |
 |------|--------|
-| Docker + Compose | apt (official repo) |
+| Docker + Compose v2 | apt (official Docker repo) |
 | Netbird | apt (official repo) |
 | Rust + cargo | rustup |
 | Go 1.26 | snap --classic |
@@ -68,9 +92,18 @@ ansible-playbook -i inventory.ini playbook.yml --extra-vars "telegram_bot_token=
 | Bun | official install script |
 | GitHub CLI | apt (official repo) |
 | Claude Code | npm global |
-| Language servers | npm/go/rustup (typescript, gopls, rust-analyzer, svelte, html/css/json, yaml, bash) |
+| Language servers | typescript, gopls, rust-analyzer, svelte, html/css/json, yaml, bash |
+| Claude LSP config | `~/.claude/.lsp.json` wiring up all language servers |
 | UFW firewall | apt |
-| SSH server + client key | apt + openssh_keypair |
+| SSH server + ed25519 client key | apt + openssh_keypair |
+| .bashrc | PATH for all tools + aliases |
+
+### Post-setup playbook (`post-setup.yml`)
+
+| Tool | Method | Requires |
+|------|--------|----------|
+| Portainer | Docker container on Netbird IP:9999 | Netbird connected |
+| Telegram channel | Bot token env file | Bot token from BotFather |
 
 ## Aliases
 
@@ -80,13 +113,13 @@ ansible-playbook -i inventory.ini playbook.yml --extra-vars "telegram_bot_token=
 
 ## Manual steps after provisioning
 
-These require interactive login and cannot be fully automated.
+SSH into the server and complete these steps. They require interactive login and cannot be fully automated.
 
 ### 1. Netbird — join your network
 ```bash
 netbird up
 ```
-Follow the browser/URL prompt to authenticate.
+Follow the URL prompt to authenticate. Once connected, run `post-setup.yml` to start Portainer.
 
 ### 2. GitHub CLI — authenticate
 ```bash
@@ -115,14 +148,18 @@ The Telegram channel lets you message Claude from your phone via a Telegram bot.
 2. Send `/newbot`, pick a display name and a username ending in `bot`
 3. Copy the token BotFather returns
 
-#### b. Configure the token
-If you didn't pass it via `--extra-vars` during ansible, run inside Claude Code:
+#### b. Save the token
+Either pass it when running `post-setup.yml`:
+```bash
+ansible-playbook -i inventory.ini post-setup.yml --extra-vars "telegram_bot_token=YOUR_TOKEN"
+```
+Or configure it manually inside Claude Code:
 ```
 /telegram:configure <YOUR_BOT_TOKEN>
 ```
-This saves it to `~/.claude/channels/telegram/.env`.
 
-#### c. Install the plugin (if ansible couldn't)
+#### c. Install the plugin
+Inside Claude Code on the server:
 ```
 /plugin marketplace add anthropics/claude-plugins-official
 /plugin install telegram@claude-plugins-official
@@ -146,6 +183,14 @@ cld --channels plugin:telegram@claude-plugins-official
    ```
    /telegram:access policy allowlist
    ```
+
+## Portainer
+
+After running `post-setup.yml`, Portainer is available at:
+```
+http://<netbird-ip>:9999
+```
+On first visit, create an admin account. Only accessible over Netbird — not exposed on the public interface.
 
 ## Firewall rules
 

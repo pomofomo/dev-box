@@ -10,18 +10,10 @@
     enabled: true
     state: started
 
-- name: Generate SSH client keypair for user
+- name: Generate SSH client keypair
   become: true
   become_user: "{{ username }}"
   openssh_keypair:
-    path: "/home/{{ username }}/.ssh/id_ed25519"
+    path: "{{ user_home }}/.ssh/id_ed25519"
     type: ed25519
     comment: "{{ username }}@dev-box"
-  when: username != "root"
-
-- name: Generate SSH client keypair for root
-  openssh_keypair:
-    path: "/root/.ssh/id_ed25519"
-    type: ed25519
-    comment: "root@dev-box"
-  when: username == "root"

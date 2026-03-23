@@ -5,13 +5,13 @@
   shell: |
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
   args:
-    creates: "{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm/nvm.sh"
+    creates: "{{ user_home }}/.nvm/nvm.sh"
 
 - name: Install Node LTS via NVM
   become: true
   become_user: "{{ username }}"
   shell: |
-    export NVM_DIR="{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.nvm"
+    export NVM_DIR="{{ user_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     nvm install --lts
   args:

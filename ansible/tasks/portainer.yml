@@ -1,0 +1,28 @@
+---
+- name: Get Netbird interface IP
+  shell: ip -4 addr show {{ netbird_interface }} 2>/dev/null | grep -oP 'inet \K[\d.]+'
+  register: netbird_ip
+  changed_when: false
+  failed_when: false
+
+- name: Create Portainer data volume
+  community.docker.docker_volume:
+    name: portainer_data
+
+- name: Run Portainer bound to Netbird IP
+  community.docker.docker_container:
+    name: portainer
+    image: portainer/portainer-ce:latest
+    state: started
+    restart_policy: always
+    ports:
+      - "{{ netbird_ip.stdout }}:9999:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+  when: netbird_ip.stdout | length > 0
+
+- name: Warn if Netbird not connected
+  debug:
+    msg: "Netbird interface {{ netbird_interface }} not found — run 'netbird up' first, then re-run this playbook to start Portainer"
+  when: netbird_ip.stdout | length == 0

@@ -5,4 +5,4 @@
   shell: |
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
   args:
-    creates: "{{ ansible_env.HOME if username == 'root' else '/home/' + username }}/.cargo/bin/rustup"
+    creates: "{{ user_home }}/.cargo/bin/rustup"
