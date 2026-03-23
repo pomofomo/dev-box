@@ -1,25 +1,26 @@
 ---
 - name: Configure PATH and aliases in .bashrc
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   blockinfile:
-    path: "{{ user_home }}/.bashrc"
+    path: "{{ dev_home }}/.bashrc"
     marker: "# {mark} DEVBOX MANAGED BLOCK"
     block: |
       # Go
       export PATH=$PATH:/snap/bin
-      export PATH=$PATH:{{ user_home }}/go/bin
+      export PATH=$PATH:{{ dev_home }}/go/bin
 
       # Rust / Cargo
-      export PATH=$PATH:{{ user_home }}/.cargo/bin
+      export PATH=$PATH:{{ dev_home }}/.cargo/bin
 
       # Bun
-      export PATH=$PATH:{{ user_home }}/.bun/bin
+      export PATH=$PATH:{{ dev_home }}/.bun/bin
 
       # NVM
-      export NVM_DIR="{{ user_home }}/.nvm"
+      export NVM_DIR="{{ dev_home }}/.nvm"
       [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
       # Aliases
       alias cld='claude --dangerously-skip-permissions'
+      alias clt='claude --dangerously-skip-permissions --channels plugin:telegram@claude-plugins-official'
     create: true

@@ -35,9 +35,8 @@ cp terraform.tfvars.example terraform.tfvars
 | `hcloud_token` | yes | Hetzner Cloud API token | Go to [Hetzner Cloud Console](https://console.hetzner.cloud/) → select a project (or create one) → Security → API Tokens → Generate API Token. Select Read & Write permissions. |
 | `ssh_public_key` | yes | Your SSH public key for server access | Run `cat ~/.ssh/id_ed25519.pub` locally. If you don't have one, generate with `ssh-keygen -t ed25519`. |
 | `server_name` | no | Name for the server (default: `dev-box`) | Any name you like. |
+| `server_type` | no | Hetzner server type (default: `cpx42`) | See [Hetzner server types](https://www.hetzner.com/cloud/). Default cpx42 is 8 vCPU, 16 GB RAM. |
 | `location` | no | Hetzner datacenter (default: `fsn1`) | Options: `fsn1` (Falkenstein), `nbg1` (Nuremberg), `hel1` (Helsinki), `ash` (Ashburn), `hil` (Hillsboro). |
-
-The server type is CPX41 (8 vCPU, 16 GB RAM, Ubuntu 24.04).
 
 ## Quick start
 
@@ -58,9 +57,16 @@ cp inventory.ini.example inventory.ini
 ansible-playbook -i inventory.ini playbook.yml
 ```
 
+The inventory template includes `StrictHostKeyChecking=accept-new` so Ansible automatically accepts the host key on first connection to a new server.
+
 ### Step 3 — Complete manual steps
 
-SSH into the server and complete the manual steps listed below.
+SSH into the server as the dev user and complete the manual steps listed below:
+```bash
+ssh dev@<server-ip>
+```
+
+The playbook creates a `dev` user with passwordless sudo and copies root's authorized_keys, so you can SSH in directly. All tools (Rust, NVM, Bun, Claude, etc.) are installed under this user.
 
 ### Step 4 — Run the post-setup playbook
 

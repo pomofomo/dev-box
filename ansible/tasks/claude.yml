@@ -1,9 +1,9 @@
 ---
 - name: Install Claude Code via npm
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
-    export NVM_DIR="{{ user_home }}/.nvm"
+    export NVM_DIR="{{ dev_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g @anthropic-ai/claude-code
   args:
@@ -11,15 +11,15 @@
 
 - name: Create Claude config directory
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   file:
-    path: "{{ user_home }}/.claude"
+    path: "{{ dev_home }}/.claude"
     state: directory
     mode: "0755"
 
 - name: Configure Claude Code LSP servers
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   copy:
     content: |
       {
@@ -93,5 +93,5 @@
           }
         }
       }
-    dest: "{{ user_home }}/.claude/.lsp.json"
+    dest: "{{ dev_home }}/.claude/.lsp.json"
     mode: "0644"

@@ -3,8 +3,8 @@
   hosts: dev
   become: true
   vars:
-    username: "{{ ansible_user }}"
-    user_home: "{{ ansible_env.HOME if username == 'root' else '/home/' + username }}"
+    dev_user: dev
+    dev_home: "/home/{{ dev_user }}"
     netbird_interface: "wt0"
     # telegram_bot_token: ""  # pass via --extra-vars
 

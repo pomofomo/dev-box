@@ -1,8 +1,8 @@
 ---
 - name: Install Bun
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
     curl -fsSL https://bun.sh/install | bash
   args:
-    creates: "{{ user_home }}/.bun/bin/bun"
+    creates: "{{ dev_home }}/.bun/bin/bun"

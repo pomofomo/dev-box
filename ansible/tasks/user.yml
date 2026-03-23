@@ -1,0 +1,34 @@
+---
+- name: Create dev user
+  user:
+    name: "{{ dev_user }}"
+    shell: /bin/bash
+    create_home: true
+    groups: sudo
+    append: true
+
+- name: Allow dev user passwordless sudo
+  copy:
+    content: "{{ dev_user }} ALL=(ALL) NOPASSWD:ALL\n"
+    dest: "/etc/sudoers.d/{{ dev_user }}"
+    mode: "0440"
+    validate: "visudo -cf %s"
+
+- name: Create Ansible tmp directory for dev user
+  file:
+    path: "{{ dev_home }}/.ansible/tmp"
+    state: directory
+    owner: "{{ dev_user }}"
+    group: "{{ dev_user }}"
+    mode: "0700"
+
+- name: Read root authorized_keys from remote
+  slurp:
+    src: /root/.ssh/authorized_keys
+  register: root_authorized_keys
+
+- name: Copy authorized_keys to dev user
+  authorized_key:
+    user: "{{ dev_user }}"
+    key: "{{ root_authorized_keys.content | b64decode }}"
+    state: present

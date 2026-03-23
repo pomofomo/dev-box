@@ -20,3 +20,9 @@ variable "location" {
   type        = string
   default     = "fsn1"
 }
+
+variable "server_type" {
+  description = "Hetzner server type"
+  type        = string
+  default     = "cpx42"
+}

@@ -23,7 +23,7 @@
 - name: UFW — allow all traffic on Netbird interface
   ufw:
     rule: allow
-    interface_or_direction: in
+    direction: in
     interface: "{{ netbird_interface }}"
 
 - name: UFW — enable firewall

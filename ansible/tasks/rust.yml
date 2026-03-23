@@ -1,8 +1,8 @@
 ---
 - name: Install Rust via rustup
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
   args:
-    creates: "{{ user_home }}/.cargo/bin/rustup"
+    creates: "{{ dev_home }}/.cargo/bin/rustup"

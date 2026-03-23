@@ -2,9 +2,9 @@
 # TypeScript / JavaScript
 - name: Install TypeScript language server
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
-    export NVM_DIR="{{ user_home }}/.nvm"
+    export NVM_DIR="{{ dev_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g typescript typescript-language-server
   args:
@@ -13,9 +13,9 @@
 # Go
 - name: Install gopls (Go language server)
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
-    export PATH=$PATH:/snap/bin:{{ user_home }}/go/bin
+    export PATH=$PATH:/snap/bin:{{ dev_home }}/go/bin
     go install golang.org/x/tools/gopls@latest
   args:
     executable: /bin/bash
@@ -23,9 +23,9 @@
 # Rust
 - name: Install rust-analyzer
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
-    export PATH=$PATH:{{ user_home }}/.cargo/bin
+    export PATH=$PATH:{{ dev_home }}/.cargo/bin
     rustup component add rust-analyzer
   args:
     executable: /bin/bash
@@ -33,9 +33,9 @@
 # Svelte
 - name: Install Svelte language server
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
-    export NVM_DIR="{{ user_home }}/.nvm"
+    export NVM_DIR="{{ dev_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g svelte-language-server
   args:
@@ -44,9 +44,9 @@
 # CSS / HTML / JSON
 - name: Install vscode-langservers (HTML, CSS, JSON)
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
-    export NVM_DIR="{{ user_home }}/.nvm"
+    export NVM_DIR="{{ dev_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g vscode-langservers-extracted
   args:
@@ -55,9 +55,9 @@
 # YAML
 - name: Install YAML language server
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
-    export NVM_DIR="{{ user_home }}/.nvm"
+    export NVM_DIR="{{ dev_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g yaml-language-server
   args:
@@ -66,9 +66,9 @@
 # Bash
 - name: Install Bash language server
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
-    export NVM_DIR="{{ user_home }}/.nvm"
+    export NVM_DIR="{{ dev_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     npm install -g bash-language-server
   args:

@@ -36,7 +36,8 @@ Two-phase deployment:
 
 ## Key conventions
 
-- All ansible task files use the `user_home` variable for home directory paths — don't hardcode or use the old `ansible_env.HOME if username == 'root' else '/home/' + username` inline pattern.
+- Ansible connects as root but creates a `dev` user. System tasks (apt, firewall, docker install) run as root. User tasks (rustup, nvm, claude, etc.) use `become_user: "{{ dev_user }}"`.
+- All ansible task files use `dev_user` and `dev_home` variables — never hardcode paths or use `ansible_env`.
 - Portainer and Telegram channel are in `post-setup.yml` because they depend on manual auth steps completing first.
 - Go is installed via snap (not tarball), so PATH uses `/snap/bin`.
 - Firewall: default deny incoming, allow SSH on public, allow all on Netbird interface (`wt0`).
@@ -45,4 +46,4 @@ Two-phase deployment:
 
 ## Server spec
 
-Hetzner CPX41: 8 vCPU, 16 GB RAM, Ubuntu 24.04.
+Hetzner CPX42 (default, configurable via `server_type` variable): 8 vCPU, 16 GB RAM, Ubuntu 24.04.

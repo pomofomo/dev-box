@@ -19,7 +19,7 @@ resource "hcloud_ssh_key" "default" {
 
 resource "hcloud_server" "dev" {
   name        = var.server_name
-  server_type = "cpx41"
+  server_type = var.server_type
   image       = "ubuntu-24.04"
   location    = var.location
   ssh_keys    = [hcloud_ssh_key.default.id]

@@ -1,17 +1,17 @@
 ---
 - name: Install NVM
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
   args:
-    creates: "{{ user_home }}/.nvm/nvm.sh"
+    creates: "{{ dev_home }}/.nvm/nvm.sh"
 
 - name: Install Node LTS via NVM
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   shell: |
-    export NVM_DIR="{{ user_home }}/.nvm"
+    export NVM_DIR="{{ dev_home }}/.nvm"
     . "$NVM_DIR/nvm.sh"
     nvm install --lts
   args:

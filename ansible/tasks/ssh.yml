@@ -10,10 +10,10 @@
     enabled: true
     state: started
 
-- name: Generate SSH client keypair
+- name: Generate SSH client keypair for dev user
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   openssh_keypair:
-    path: "{{ user_home }}/.ssh/id_ed25519"
+    path: "{{ dev_home }}/.ssh/id_ed25519"
     type: ed25519
-    comment: "{{ username }}@dev-box"
+    comment: "{{ dev_user }}@dev-box"

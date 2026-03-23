@@ -1,17 +1,17 @@
 ---
 - name: Create Claude Telegram channel directory
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   file:
-    path: "{{ user_home }}/.claude/channels/telegram"
+    path: "{{ dev_home }}/.claude/channels/telegram"
     state: directory
     mode: "0755"
 
 - name: Write Telegram bot token env file
   become: true
-  become_user: "{{ username }}"
+  become_user: "{{ dev_user }}"
   copy:
     content: "TELEGRAM_BOT_TOKEN={{ telegram_bot_token }}"
-    dest: "{{ user_home }}/.claude/channels/telegram/.env"
+    dest: "{{ dev_home }}/.claude/channels/telegram/.env"
     mode: "0600"
   when: telegram_bot_token is defined and telegram_bot_token | length > 0
